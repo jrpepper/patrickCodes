@@ -13,3 +13,11 @@ for (x in 1:length(clientList)) {
   subsetData <- subset(clientData, clientData$name==client)
   write.csv(subsetData, paste("./",client,".csv", sep=""))
 }
+
+#solution usign apply()
+f1 <- function(client, y) {
+  subsetData <- subset(y, y$name==client)
+  write.csv(subsetData, file=paste("./",client,".csv", sep=""))
+}
+
+lapply(clientList, f1, y=clientData)
