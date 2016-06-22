@@ -26,6 +26,12 @@ for (x in 1:length(clientList)) {
   write.csv(subsetData, paste("./timelogs/",uclient,".csv", sep=""), row.names = FALSE)
 }
 
+#make list of file names from clientList
+fileNameList <- gsub(" ","",clientList)
+fileNameList <- gsub("\\.","",fileNameList)
+
+write.csv(fileNameList, paste("./#fileNames.csv"), row.names = FALSE)
+
 #solution usign apply()
 #f1 <- function(client, y) {
 #  subsetData <- subset(y, y$name==client)
