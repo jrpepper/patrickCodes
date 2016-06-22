@@ -13,8 +13,17 @@ clientList <- mytable$Client %>% unique() %>% as.character() %>% sort()
 #for loop solution
 for (x in 1:length(clientList)) {
   uclient <- clientList[x]
-  subsetData <- subset(mytable, mytable$Client==clientList)
-  write.csv(subsetData, paste("./timelogs/",uclient,".csv", sep=""))
+  subsetData <- subset(mytable, mytable$Client==uclient)
+  
+  #add new line at bottom with summary data
+  sumRow <- rep("",dim(subsetData)[2])
+  sumRow[2] <- sum(subsetData$Dur.Qty)
+  sumRow[4] <- "Total Hours"
+  
+  subsetData <- rbind(subsetData, sumRow)
+  
+  #write new file using subsetData
+  write.csv(subsetData, paste("./timelogs/",uclient,".csv", sep=""), row.names = FALSE)
 }
 
 #solution usign apply()
