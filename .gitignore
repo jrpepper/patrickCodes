@@ -2,3 +2,7 @@
 *.history
 
 clients14.csv
+
+.Rhistory
+
+.RData
