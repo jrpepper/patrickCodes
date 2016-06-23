@@ -3,39 +3,47 @@ library(dplyr)
 library(lubridate)
 setwd("/Users/Ifrit/Documents/codes/patrickCodes/")
 
-
 #import csv
-mytable <- read.csv("./clients14.csv", stringsAsFactors = FALSE)
+mytable <- read.csv("./clients.csv", stringsAsFactors = FALSE)
 
 #get unique list of clients
 clientList <- mytable$Client %>% unique() %>% as.character() %>% sort()
+
+#make list of file names from clientList
+fileNameList <- gsub(" ","",clientList)
+fileNameList <- gsub("\\.","",fileNameList)
+fileNameList <- gsub("-","",fileNameList)
+
+fdate <- paste(year(today()),"0",month(today())-1, sep="")
+
+for (x in 1:length(fileNameList)) {
+  fileNameList[x] <- paste(fileNameList[x],fdate, sep="") 
+}
 
 #for loop solution
 for (x in 1:length(clientList)) {
   uclient <- clientList[x]
   subsetData <- subset(mytable, mytable$Client==uclient)
   
-  #add new line at bottom with summary data
+  #add new line at bottom with summary data w/ line space
   sumRow <- rep("",dim(subsetData)[2])
-  sumRow[2] <- sum(subsetData$Dur.Qty)
-  sumRow[4] <- "Total Hours"
+  sumRow[2] <- sum(subsetData[2])
+  sumRow[1] <- "Total Hours"
   
-  subsetData <- rbind(subsetData, sumRow)
+  addRow <- rep("",dim(subsetData)[2])
+  
+  subsetData <- rbind(subsetData, addRow, sumRow)
+  
+  #get filename
+  fclient <- gsub("\\ ","",uclient)
+  fclient <- gsub("\\.","",fclient)
+  fclient <- gsub("\\-","",fclient)
+  fclient <- paste(fclient,fdate,sep="")
   
   #write new file using subsetData
-  write.csv(subsetData, paste("./timelogs/",uclient,".csv", sep=""), row.names = FALSE)
+  write.csv(subsetData, paste("./timelogs/",fclient,".csv", sep=""), row.names = FALSE)
 }
 
-#make list of file names from clientList
-fileNameList <- gsub(" ","",clientList)
-fileNameList <- gsub("\\.","",fileNameList)
-
-write.csv(fileNameList, paste("./#fileNames.csv"), row.names = FALSE)
-
-#solution usign apply()
-#f1 <- function(client, y) {
-#  subsetData <- subset(y, y$name==client)
-#  write.csv(subsetData, file=paste("./",client,".csv", sep=""))
-#}
-#
-#lapply(clientList, f1, y=clientData)
+write.csv(data.frame(fileNameList, clientList),
+          paste("./timelogs/#fileNames.csv"),
+          row.names = FALSE)

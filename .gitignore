@@ -5,5 +5,15 @@ clients14.csv
 
 .Rhistory
 .RData
+<<<<<<< Updated upstream
 
 timelogs/*
+=======
+*.csv
+
+timelogs/.csv
+
+*.csv
+
+*.csv
+>>>>>>> Stashed changes
